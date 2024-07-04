@@ -41,7 +41,7 @@ void DumpRequest(const StringRequest& request);
 StringResponse MakeStringResponse(
 	http::status status,
 	std::string_view body,
-	UINT http_version,
+	unsigned int http_version,
 	bool keep_alive,
 	http::verb method,
 	std::string_view content_type);
@@ -120,7 +120,7 @@ void DumpRequest(const StringRequest& request) {
 StringResponse MakeStringResponse(
 	http::status status,
 	std::string_view body,
-	UINT http_version,
+	unsigned int http_version,
 	bool keep_alive,
 	http::verb method,
 	std::string_view content_type = ContentType::TEXT_HTML)
