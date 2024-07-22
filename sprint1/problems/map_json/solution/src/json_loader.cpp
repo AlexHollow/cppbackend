@@ -105,7 +105,7 @@ model::Game LoadGame(const std::filesystem::path& json_path) {
     return game;
 }
 
-std::string GetSerializedRoads(const model::Map::Roads& roads) {
+json::array GetRoads(const model::Map::Roads& roads) {
     json::array json_roads;
     for (const auto& road : roads) {
         model::Point start = road.GetStart();
@@ -123,10 +123,10 @@ std::string GetSerializedRoads(const model::Map::Roads& roads) {
 
         json_roads.push_back(std::move(obj));
     }
-    return json::serialize(json_roads);
+    return json_roads;
 }
 
-std::string GetSerializedBuildings(const model::Map::Buildings& buildings) {
+json::array GetBuildings(const model::Map::Buildings& buildings) {
     json::array json_buildings;
     for (const auto& building : buildings) {
         model::Rectangle bounds = building.GetBounds();
@@ -137,10 +137,10 @@ std::string GetSerializedBuildings(const model::Map::Buildings& buildings) {
         obj["h"] = bounds.size.height;
         json_buildings.push_back(std::move(obj));
     }
-    return json::serialize(json_buildings);
+    return json_buildings;
 }
 
-std::string GetSerializedOffices(const model::Map::Offices& offices) {
+json::array GetOffices(const model::Map::Offices& offices) {
     json::array json_offices;
     for (const auto& office : offices) {
         model::Point pos = office.GetPosition();
@@ -154,7 +154,7 @@ std::string GetSerializedOffices(const model::Map::Offices& offices) {
         obj["offsetY"] = offset.dy;
         json_offices.push_back(std::move(obj));
     }
-    return json::serialize(json_offices);
+    return json_offices;
 }
 
 std::string GetSerializedMaps(const std::vector<model::Map>& maps) {
@@ -172,9 +172,9 @@ std::string GetSerializedMap(const model::Map& map) {
     json::object obj;
     obj["id"] = *map.GetId();
     obj["name"] = map.GetName();
-    obj["roads"] = GetSerializedRoads(map.GetRoads());
-    obj["buildings"] = GetSerializedBuildings(map.GetBuildings());
-    obj["offices"] = GetSerializedOffices(map.GetOffices());
+    obj["roads"] = GetRoads(map.GetRoads());
+    obj["buildings"] = GetBuildings(map.GetBuildings());
+    obj["offices"] = GetOffices(map.GetOffices());
     return json::serialize(obj);
 }
 
