@@ -62,28 +62,29 @@ StringResponse RequestHandler::HandleRequest(StringRequest&& request) {
     std::size_t query_size = query_keys.size();
 
     if (query_size != 0 && query_keys[0] == "api") {
-        if (query_size >= 3 && query_keys[2] == "maps") {
+        if (query_size >= 3 && query_keys[1] == "v1" && query_keys[2] == "maps") {
             if (query_size == 3) {
                 body = json_loader::GetSerializedMaps(game_.GetMaps());
-                return response(http::status::ok, body);
+                
             }
 
-            if (query_size == 4 && !query_keys[3].empty()) {
+            if (query_size == 4) {
                 const model::Map* map = game_.FindMap(model::Map::Id(query_keys[3]));
 
                 if (map) {
                     body = json_loader::GetSerializedMap(*map);
-                    return response(http::status::ok, body);
                 } else {
                     body = json_loader::GetSerializedError("mapNotFound", "Map not found");
                     return response(http::status::not_found, body);
                 }
             }
+        } else {
+            body = json_loader::GetSerializedError("badRequest", "Bad request");
+            return response(http::status::bad_request, body);
         }
     }
 
-    body = json_loader::GetSerializedError("badRequest", "Bad request");
-    return response(http::status::bad_request, body);
+    return response(http::status::ok, body);
 }
 
 }  // namespace http_handler
