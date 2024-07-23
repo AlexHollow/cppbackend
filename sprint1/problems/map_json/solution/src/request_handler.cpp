@@ -61,10 +61,11 @@ StringResponse RequestHandler::HandleRequest(StringRequest&& request) {
     std::vector<std::string> query_keys = ParseQuery(query, '/');
     std::size_t query_size = query_keys.size();
 
-    if (query_keys[0] == "api") {
-        if (query_keys[2] == "maps") {
+    if (query_size != 0 && query_keys[0] == "api") {
+        if (query_size >= 3 && query_keys[2] == "maps") {
             if (query_size == 3) {
                 body = json_loader::GetSerializedMaps(game_.GetMaps());
+                return response(http::status::ok, body);
             }
 
             if (query_size == 4 && !query_keys[3].empty()) {
@@ -72,18 +73,17 @@ StringResponse RequestHandler::HandleRequest(StringRequest&& request) {
 
                 if (map) {
                     body = json_loader::GetSerializedMap(*map);
+                    return response(http::status::ok, body);
                 } else {
                     body = json_loader::GetSerializedError("mapNotFound", "Map not found");
                     return response(http::status::not_found, body);
                 }
             }
-        } else {
-            body = json_loader::GetSerializedError("badRequest", "Bad request");
-            return response(http::status::bad_request, body);
         }
     }
 
-    return response(http::status::ok, body);
+    body = json_loader::GetSerializedError("badRequest", "Bad request");
+    return response(http::status::bad_request, body);
 }
 
 }  // namespace http_handler
