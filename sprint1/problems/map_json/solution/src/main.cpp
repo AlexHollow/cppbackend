@@ -1,5 +1,7 @@
 #include "sdk.h"
 //
+#define BOOST_BEAST_USE_STD_STRING_VIEW
+
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <iostream>

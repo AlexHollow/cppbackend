@@ -1,4 +1,7 @@
 #pragma once
+
+#define BOOST_BEAST_USE_STD_STRING_VIEW
+
 #include <string>
 #include <unordered_map>
 #include <vector>

@@ -60,7 +60,7 @@ StringResponse RequestHandler::HandleRequest(StringRequest&& request) {
     auto query = request.target().substr(1);
     std::vector<std::string> query_keys = ParseQuery(query, '/');
     std::size_t query_size = query_keys.size();
-
+    
 	if (query_size != 0 && query_keys[0] == "api") {
 		if (query_size >= 3 && query_keys[1] == "v1" && query_keys[2] == "maps") {
 			if (query_size == 3) {
