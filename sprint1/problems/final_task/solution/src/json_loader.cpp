@@ -9,6 +9,11 @@ namespace json = boost::json;
 json::value ParseFile(const std::filesystem::path& json_path) {
     static const std::size_t BUFF_SIZE = 1024;
     std::ifstream fin(json_path);
+
+    if (!fin.is_open()) {
+        return nullptr;
+    }
+
     json::stream_parser p;
     json::error_code ec;
 
