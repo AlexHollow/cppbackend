@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iomanip>
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -12,6 +13,7 @@
 #include <thread>
 
 using namespace std::literals;
+namespace fs = std::filesystem;
 
 #define LOG(...) Logger::GetInstance().Log(__VA_ARGS__)
 
@@ -25,11 +27,12 @@ public:
     template<class... Ts>
     void Log(const Ts&... args) {
         std::lock_guard<std::mutex> lg(m_);
-        std::string new_log_file_name = "/var/log/sample_log_" + GetFileTimeStamp() + ".log";
+        std::string new_log_file_name = "sample_log_" + GetFileTimeStamp() + ".log";
+        fs::path file_path = fs::path("var/log/") / fs::path(new_log_file_name);
 
         if (new_log_file_name != current_log_file_name_) {
             log_file_.close();
-            log_file_.open(new_log_file_name, std::ios::app);
+            log_file_.open(file_path, std::ios::app);
         }
 
         if (log_file_.is_open()) {
@@ -68,14 +71,12 @@ private:
     }
 
     auto GetTimeStamp() const {
-        const auto now = GetTime();
-        const auto t_c = std::chrono::system_clock::to_time_t(now);
+        const auto t_c = std::chrono::system_clock::to_time_t(GetTime());
         return std::put_time(std::localtime(&t_c), "%F %T");
     }
 
     std::string GetFileTimeStamp() const {
-        const auto now = GetTime();
-        const auto t_c = std::chrono::system_clock::to_time_t(now);
+        const auto t_c = std::chrono::system_clock::to_time_t(GetTime());
         std::stringstream ss;
         ss << std::put_time(std::localtime(&t_c), "%F");
         return ss.str();
