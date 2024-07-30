@@ -72,13 +72,13 @@ private:
 
     auto GetTimeStamp() const {
         const auto t_c = std::chrono::system_clock::to_time_t(GetTime());
-        return std::put_time(std::localtime(&t_c), "%F %T");
+        return std::put_time(std::gmtime(&t_c), "%F %T");
     }
 
     std::string GetFileTimeStamp() const {
         const auto t_c = std::chrono::system_clock::to_time_t(GetTime());
         std::stringstream ss;
-        ss << std::put_time(std::localtime(&t_c), "%F");
+        ss << std::put_time(std::gmtime(&t_c), "%F");
         return ss.str();
     }
 
