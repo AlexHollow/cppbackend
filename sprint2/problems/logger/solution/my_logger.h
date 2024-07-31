@@ -28,7 +28,10 @@ public:
     void Log(const Ts&... args) {
         std::lock_guard<std::mutex> lg(m_);
         std::string new_log_file_name = "sample_log_" + GetFileTimeStamp() + ".log";
-        fs::path file_path = fs::path("var/log/") / fs::path(new_log_file_name);
+        fs::path directory = fs::path("/var/log/");
+        fs::path file_path = directory / fs::path(new_log_file_name);
+
+        fs::create_directories(directory);
 
         if (new_log_file_name != current_log_file_name_) {
             log_file_.close();
